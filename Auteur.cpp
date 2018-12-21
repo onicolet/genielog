@@ -4,7 +4,7 @@
 
 string * Auteur::getAuteurs()
 {
-	return nullptr;
+	return NULL;
 }
 
 void Auteur::getAuteursViaScript(string fichierResultat)
