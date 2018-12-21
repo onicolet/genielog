@@ -12,7 +12,7 @@ void Auteur::getAuteursViaScript(string fichierResultat,string FileName)
 	ifstream file;
 	bool found = false;
 	string line; 
-	vector<string> abstract(100);
+	vector<string> abstract;
 	string cmp1 = "Abstract";
 	file.open(fichierResultat);
 	int i = 0;
@@ -24,24 +24,23 @@ void Auteur::getAuteursViaScript(string fichierResultat,string FileName)
 		if (cmp1.compare(line)==0 || found)
 		{
 			found = true;
-			if (line.empty())
+			if (line.empty() && !abstract.empty())
 			{
-				j++;
-				if (j == 2){ break; }
+				break; 
 			}
 			else
-			{
-				abstract.push_back(line);
-				//cout << "add" << i << endl;
+			{ 	if(i!=0)
+				{abstract.push_back(line);}
+				cout << "add" << i << endl;
 				i++;
 			}
 		}
 	}
-	for (unsigned int z = 0; z<abstract.size(); ++z)
-	{
-		cout << abstract[z];
-		//process on el...
-	}
+	// for (unsigned int z = 0; z<abstract.size(); ++z)
+	// {
+	// 	cout << abstract[z];
+	// 	//process on el...
+	// }
 	file.close();
 	writeFile(FileName,abstract);
 }
@@ -51,7 +50,7 @@ void Auteur::writeFile(string FileName,vector<string> abstract)
 	 std::ofstream out;
 	 out.open(FileName, std::ios::app);
 
-	 out << "abstract ="<< endl ;
+	 out << "abstract = " ;
 	 for (unsigned int z = 0; z<abstract.size(); ++z)
 	 {
 		 out << abstract[z];
