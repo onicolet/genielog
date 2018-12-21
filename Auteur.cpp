@@ -15,23 +15,22 @@ void Auteur::getAuteursViaScript(string fichierResultat,string FileName)
 	vector<string> abstract;
 	string cmp1 = "Abstract";
 	file.open(fichierResultat);
-	int i = 0;
-	int j = 0;
+	string strcompare;
+	int i=0;
 	while (! file.eof())
 	{
 		getline(file, line);
-
-		if (cmp1.compare(line)==0 || found)
+		strcompare = line.substr (0,8);
+		if (cmp1.compare(strcompare)==0 || found)
 		{
 			found = true;
 			if (line.empty() && !abstract.empty())
 			{
 				break; 
 			}
-			else
+			else if(!line.empty())
 			{ 	if(i!=0)
 				{abstract.push_back(line);}
-				cout << "add" << i << endl;
 				i++;
 			}
 		}
