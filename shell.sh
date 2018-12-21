@@ -16,7 +16,7 @@ fi
 for file in *.pdf
 do
 	nameFile=`basename "$file" ".pdf"`".txt"
-	pdf2txt  -o "CONVERT/$nameFile" "$file"
-	echo "$file" >> "PARSE/$nameFile"
+	pdf2txt  -V -o "CONVERT/$nameFile" "$file"
+	echo "$file" > "PARSE/$nameFile"
 		
 done
