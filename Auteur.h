@@ -1,16 +1,21 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <fcntl.h>
-#include <unistd.h>
+#pragma once
+#include <string.h>
 #include <iostream>
+#include <stdio.h>
+#include <fstream>
+#include <vector>
+#include <string>
 
-using namespace std; 
+using namespace std;
 
 class Auteur
 {
-public:
-	String nomAuteurs;
 private:
-	String getAuteurs();
-	void getAuteursViaScript();
-}
+	char** nomAuteur;
+public:
+	string * getAuteurs();
+	void getAuteursViaScript(string fichierResultat);
+	Auteur();
+	~Auteur();
+};
+
