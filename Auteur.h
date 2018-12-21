@@ -14,7 +14,8 @@ private:
 	char** nomAuteur;
 public:
 	string * getAuteurs();
-	void getAuteursViaScript(string fichierResultat);
+	void getAuteursViaScript(string fichierResultat,string);
+	void writeFile(string FileName, vector<string> abstract);
 	Auteur();
 	~Auteur();
 };

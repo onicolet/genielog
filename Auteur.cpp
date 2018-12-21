@@ -7,7 +7,7 @@ string * Auteur::getAuteurs()
 	return NULL;
 }
 
-void Auteur::getAuteursViaScript(string fichierResultat)
+void Auteur::getAuteursViaScript(string fichierResultat,string FileName)
 {
 	ifstream file;
 	bool found = false;
@@ -43,9 +43,21 @@ void Auteur::getAuteursViaScript(string fichierResultat)
 		//process on el...
 	}
 	file.close();
-
+	writeFile(FileName,abstract);
 }
 
+void Auteur::writeFile(string FileName,vector<string> abstract)
+{
+	 std::ofstream out;
+	 out.open(FileName, std::ios::app);
+
+	 out << "abstract ="<< endl ;
+	 for (unsigned int z = 0; z<abstract.size(); ++z)
+	 {
+		 out << abstract[z];
+	 }
+	 out.close();
+}
 Auteur::Auteur()
 {
 }

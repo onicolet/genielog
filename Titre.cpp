@@ -11,13 +11,12 @@ Titre::~Titre()
 {
 }
 
-void Titre::getTitreViaScript(string fichierResultat)
+void Titre::getTitreViaScript(string fichierResultat,string FileName)
 {
 
 	ifstream file;
 	string line;
-	vector<string> abstract(10);
-	string cmp1 = "Abstract";
+	string titre;
 	file.open(fichierResultat);
 	int i = 0;
 	int j = 0;
@@ -26,16 +25,24 @@ void Titre::getTitreViaScript(string fichierResultat)
 		getline(file, line);
 			if (i==1)
 			{
-				abstract.push_back(line);
+				titre=line;
 				break;
 				//cout << "add" << i << endl;
 			}
 		
 			i++;
 	}
-	for (unsigned int z = 0; z<abstract.size(); ++z)
-	{
-		cout << abstract[z];
-	}
+
+	cout << titre;
 	file.close();
+	writeFile(FileName,titre);
+}
+
+void Titre::writeFile(string FileName,string titre)
+{
+	 std::ofstream out;
+	 out.open(FileName, std::ios::app);
+
+	 out << "file name ="<<titre<<endl;
+	 out.close();
 }

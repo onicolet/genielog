@@ -13,6 +13,7 @@ class Titre
 public:
 	Titre();
 	~Titre();
-	void getTitreViaScript(string fichierResultat);
+	void getTitreViaScript(string fichierResultat,string);
+	void writeFile(string FileName, string titre);
 };
 
