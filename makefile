@@ -1,9 +1,9 @@
-CC=g++ --std=c++17
+CC=g++ --std=c++11
 EXEC=convertIt
 
 
-all: main.cpp Auteur.o Titre.o
-	$(CC) Auteur.o Titre.o main.cpp -o $(EXEC)
+all: Source.cpp Auteur.o Titre.o
+	$(CC) Auteur.o Titre.o Source.cpp -o $(EXEC)
 
 %.o: %.cpp
 	$(CC) -c $< 
