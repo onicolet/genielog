@@ -18,19 +18,14 @@ void Titre::getTitreViaScript(string fichierResultat,string FileName)
 	string line;
 	string titre;
 	file.open(fichierResultat);
-	int i = 0;
-	int j = 0;
 	while (!file.eof())
 	{
 		getline(file, line);
-			if (i==1)
+			if (!line.empty())
 			{
 				titre=line;
 				break;
-				//cout << "add" << i << endl;
 			}
-		
-			i++;
 	}
 
 	cout << titre;
