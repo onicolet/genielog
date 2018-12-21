@@ -1,8 +1,6 @@
-#include <iostream>
 #include "Titre.h"
 #include "Auteur.h"
 #include "Document.h"
-using namespace std;
 
 
 int main()
