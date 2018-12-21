@@ -1,5 +1,24 @@
-Griot Nathan
-Nicolet Olivier
-Heno Jonhatan
-Vallot Jeremy
-Tramier Antoine
+Auteurs:
+
+	Griot Nathan
+	Nicolet Olivier
+	Heno Jonhatan
+	Vallot Jeremy
+	Tramier Antoine
+
+Description fonctionnelle:
+
+	Script Shell convertissant les .pdf en fichiers .txt en implémentant
+	la librairie pdf2txt.
+	Logiciel C++ 
+	
+	Le script Shell prend en paramêtre le chemin vers un dossier
+	contenant tous les fichiers .pdf à convertir, scanne et convertit
+	ces fichiers en .txt et les place dans un dossier CONVERT/ une fois 
+	l'opération effectuée.
+	
+	L'application C++ prend en paramêtre un fichier .txt le parse et 
+	place le résultat dans le folder PARSE/.
+
+
+	
