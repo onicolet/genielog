@@ -14,6 +14,7 @@ void Auteur::getAuteursViaScript(string fichierResultat,string FileName)
 	string line; 
 	vector<string> abstract;
 	string cmp1 = "Abstract";
+	string cmp2= "ABSTRACT";
 	file.open(fichierResultat);
 	string strcompare;
 	int i=0;
@@ -21,7 +22,7 @@ void Auteur::getAuteursViaScript(string fichierResultat,string FileName)
 	{
 		getline(file, line);
 		strcompare = line.substr (0,8);
-		if (cmp1.compare(strcompare)==0 || found)
+		if ((cmp1.compare(strcompare)==0||cmp2.compare(strcompare)==0) || found)
 		{
 			found = true;
 			if (line.empty() && !abstract.empty())
