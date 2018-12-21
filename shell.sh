@@ -17,5 +17,6 @@ for file in *.pdf
 do
 	nameFile=`basename "$file" ".pdf"`".txt"
 	pdf2txt  -o "CONVERT/$nameFile" "$file"
-	sed -i '1i'"$file" "CONVERT/$nameFile" 
+	echo "$file" >> "PARSE/$nameFile"
+		
 done
