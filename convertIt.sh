@@ -1,6 +1,8 @@
 #! /bin/bash
 
 
+
+
 cd $1
 
 if [ ! -d "CONVERT" ];then
@@ -11,17 +13,54 @@ if [ ! -d "PARSE" ];then
 	mkdir "PARSE"
 fi
 
+if [ ! -d "XML" ];then
+	mkdir "XML"
+fi
 
 
-for file in *.pdf
-do
-	nameFile=`basename "$file" ".pdf"`".txt"
+var="$2"
+if [ "$var" == "-x" ]
+then
+	for file in *.pdf
+	do
+		echo "$var"
+
+		fileNameBuffer=`basename "$file" ".pdf"`".data"
+		fileNameFinal=`basename "$file" ".pdf"`".xml"
+
+		echo $fileNameBuffer
+		echo $fileNameFinal
+		#A executer sur le raspberry
+		pdf2txt.py  -p 1 -V -o "CONVERT/$fileNameBuffer" "$file"
+		#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
+
+		# Initialisation du fichier de sortie
+		echo -e "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" > "XML/$fileNameBuffer"
+		echo "<article>" >> "XML/$fileNameBuffer"
+		echo -e "\t<preamble> $file </preamble>" >> "XML/$fileNameBuffer"
+		"../genielog/convertIt" "CONVERT/$fileNameBuffer" "XML/$fileNameBuffer" "$2"
+		echo -e "\n</article>" >> "XML/$fileNameBuffer"
+		
+		echo "truc 2"
+		# On renomme l'extension du fichier
+		mv "XML/$fileNameBuffer" "XML/$fileNameFinal"
+	done 
+
+elif [ "$var" == "-t" ]
+then
+	for file in *.pdf
+	do
+		nameFile=`basename "$file" ".pdf"`".txt"
 	
-	#A executer sur le raspberry
-	pdf2txt.py  -p 1 -V -o "CONVERT/$nameFile" "$file"
-	#pdf2txt  -V -o "CONVERT/$nameFile" "$file"
-	echo "$file" > "PARSE/$nameFile"
-	
-	"../genielog/convertIt" "CONVERT/$nameFile" "PARSE/$nameFile"	
+		#A executer sur le raspberry
+		pdf2txt.py  -p 1 -V -o "CONVERT/$nameFile" "$file"
+		#pdf2txt  -V -o "CONVERT/$nameFile" "$file"
+		echo "$file" > "PARSE/$nameFile"
+		
+		"../genielog/convertIt" "CONVERT/$nameFile" "PARSE/$nameFile" "$2"	
+	done
 
-done
+
+else
+	echo "Exécuter avec -t pour une sortie texte ou -x pour une sortie xml"
+fi
