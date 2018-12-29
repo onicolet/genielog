@@ -8,8 +8,8 @@
 
 using namespace std;
 
-class Auteur
-{
+
+class Auteur {
 private:
 	int param;
 public:

@@ -8,16 +8,15 @@
 
 using namespace std;
 
-class Structure
-{
+
+class Structure {
 private:
 	int param;
 public:
 	Structure();
 	Structure(string);
 	~Structure();
-	void getBiblioViaScript(string,string);
+	void getBiblioViaScript(string, string);
 	void writeFile(string, vector<string>);
 	void writeFileX(string, vector<string>);
 };
-

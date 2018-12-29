@@ -1,24 +1,22 @@
 #! /bin/bash
 
 
-
-
 cd $1
 
-if [ ! -d "CONVERT" ];then
+if [ ! -d "CONVERT" ]
+then
 	mkdir "CONVERT"
-fi
-
-if [ ! -d "PARSE" ];then
+elif [ ! -d "PARSE" ]
+then
 	mkdir "PARSE"
-fi
-
-if [ ! -d "XML" ];then
+elif [ ! -d "XML" ]
+then
 	mkdir "XML"
 fi
 
 
 var="$2"
+
 if [ "$var" == "-x" ]
 then
 	for file in *.pdf
@@ -34,14 +32,12 @@ then
 		echo -e "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" > "XML/$fileNameBuffer"
 		echo "<article>" >> "XML/$fileNameBuffer"
 		echo -e "\t<preamble> $file </preamble>" >> "XML/$fileNameBuffer"
-		echo ".sh $2"
 		"../genielog/convertIt" "CONVERT/$fileNameBuffer" "XML/$fileNameBuffer" "$2"
 		echo -e "\n</article>" >> "XML/$fileNameBuffer"
 		
 		# On renomme l'extension du fichier
 		mv "XML/$fileNameBuffer" "XML/$fileNameFinal"
 	done 
-
 elif [ "$var" == "-t" ]
 then
 	for file in *.pdf
@@ -55,8 +51,6 @@ then
 		
 		"../genielog/convertIt" "CONVERT/$nameFile" "PARSE/$nameFile" "$2"	
 	done
-
-
 else
-	echo "Exécuter avec -t pour une sortie texte ou -x pour une sortie xml"
+	echo "Exécutez avec -t pour une sortie texte ou -x pour une sortie xml"
 fi
