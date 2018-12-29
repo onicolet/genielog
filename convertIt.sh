@@ -48,7 +48,6 @@ then
 		pdf2txt.py  -p 1 -V -o "CONVERT/$nameFile" "$file"
 		#pdf2txt  -V -o "CONVERT/$nameFile" "$file"
 		echo "$file" > "PARSE/$nameFile"
-		
 		"../genielog/convertIt" "CONVERT/$nameFile" "PARSE/$nameFile" "$2"	
 	done
 else
