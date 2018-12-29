@@ -11,12 +11,17 @@ using namespace std;
 class Auteur
 {
 private:
-	char** nomAuteur;
+	int param;
 public:
-	string * getAuteurs();
-	void getAuteursViaScript(string fichierResultat,string);
-	void writeFile(string FileName, vector<string> abstract);
+	void getAbstractViaScript(string fichierResultat,string);
+	void getAuteurViaScript(string fichierResultat,string);
+	void writeFileAbstract(string FileName, vector<string> abstract);
+	void writeFileAbstractX(string, vector<string>);
+	void writeFileAuteur(string FileName, vector<string> abstract);
+	void writeFileAuteurX(string, vector<string>);
+
 	Auteur();
+	Auteur(string);
 	~Auteur();
 };
 
