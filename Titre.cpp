@@ -8,7 +8,8 @@ Titre::Titre()
 
 Titre::Titre(string par)
 {
-	if(par.compare("-x"))
+	cout << ".cpp " << par;
+	if(par.compare("-x")==0)
 	{
 		param = 1 ;	
 	}

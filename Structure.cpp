@@ -8,7 +8,7 @@ Structure::Structure()
 
 Structure::Structure(string par)
 {
-	if(par.compare("-x"))
+	if(par.compare("-x") == 0)
 	{
 		param = 1 ;	
 	}
