@@ -19,8 +19,7 @@ void Auteur::getAuteurViaScript(string fichierResultat,string FileName)
 	string line; 
 	vector<string> auteur;
 	string cmp1 = "Abstract";
-	string cmp2 = "Abstract";
-	string cmp3 = "abstract";
+	string cmp2 = "ABSTRACT";
 	file.open(fichierResultat);
 	string strcompare;
 	int i=0;
@@ -28,7 +27,7 @@ void Auteur::getAuteurViaScript(string fichierResultat,string FileName)
 	{
 		getline(file, line);
 		strcompare = line.substr (0,8);
-		if (cmp1.compare(strcompare)==0 || cmp2.compare(strcompare)==0|| cmp3.compare(strcompare))
+		if (cmp1.compare(strcompare)==0 || cmp2.compare(strcompare)==0)
 		{
 			break;
 		}
@@ -54,8 +53,7 @@ void Auteur::getAbstractViaScript(string fichierResultat,string FileName)
 	string line; 
 	vector<string> abstract;
 	string cmp1 = "Abstract";
-	string cmp2 = "Abstract";
-	string cmp3 = "abstract";
+	string cmp2 = "ABSTRACT";
 	file.open(fichierResultat);
 	string strcompare;
 	int i=0;
@@ -63,7 +61,7 @@ void Auteur::getAbstractViaScript(string fichierResultat,string FileName)
 	{
 		getline(file, line);
 		strcompare = line.substr (0,8);
-		if (cmp1.compare(strcompare)==0 || cmp2.compare(strcompare)==0|| cmp3.compare(strcompare) || found)
+		if (cmp1.compare(strcompare)==0 || cmp2.compare(strcompare)==0 || found)
 		{
 			found = true;
 			if (line.empty() && !abstract.empty())
