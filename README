@@ -2,23 +2,92 @@ Auteurs:
 
 	Griot Nathan
 	Nicolet Olivier
-	Heno Jonhatan
+	Heno Jonathan
 	Vallot Jeremy
 	Tramier Antoine
 
+
+
 Description fonctionnelle:
 
-	Script Shell convertissant les .pdf en fichiers .txt en implémentant
-	la librairie pdf2txt.
-	Logiciel C++ 
-	
-	Le script Shell prend en paramêtre le chemin vers un dossier
-	contenant tous les fichiers .pdf à convertir, scanne et convertit
-	ces fichiers en .txt et les place dans un dossier CONVERT/ une fois 
-	l'opération effectuée.
-	
-	L'application C++ prend en paramêtre un fichier .txt le parse et 
-	place le résultat dans le folder PARSE/.
+	Le script Shell prends en paramêtre un chemin vers le dossier contenant tous les .pdf 
+	à parser.
+	Il fait appel à une application C++ qui s'occupe de faire le parsing en fonction des paramêtres 
+	entrés par l'utilisateur.
+
+	Paramêtres:
+
+		-t Parse le fichier choisis en .txt
+		-x Parse le fichier choisis en .xml
 
 
+
+Versionnement:
+
+	Version 1 - git checkout V1
+
+		L'application n'est capable de parser qu'en .txt
+		
+		Le parsing contient:
+
+			origin: le nom du fichier
+			title: le titre de l'article
+			abstract: le résumé de l'article
+
+
+
+	Version 2 - git checkout V2
+
+		L'application demande un paramêtre avant de parser pour choisir le format de destination
+		
+		Le parsing en .txt contient:
+
+			origin: le nom du fichier
+			title: le titre de l'article
+			auteur: le ou les auteurs de l'article
+			abstract: le résumé de l'article
+			bibliography: les sources de l'article
+
+		Le parsing en .xml contient:
+						
+			<article>
+      				<preamble> Le nom du fichier d’origine </preamble>
+				<titre> Le titre du papier </titre>
+				<auteur> La section auteurs et leur adresse</auteur>
+				<abstract> Le résumé de l’article</abstract>
+				<biblio> Les références bibliographiques du papier</biblio>
+			</article>
+
+
+
+	Version 3 - git checkout V3
 	
+		A l'aide d'un menu listant les fichiers PDF disponibles, l'utilisateur choisis le ou les 
+		fichiers qu'il souhaite parser, et dans quel format il souhaite obtenir le résultat.
+
+		Le parsing en .txt contient:
+
+			origin: le nom du fichier
+			title: le titre de l'article
+			auteur: le ou les auteurs de l'article
+			abstract: le résumé de l'article
+			introduction: l'introduction de l'article
+			corps: le développement de l'article
+			conclusion: la conclusion de l'article
+			discussion: la discussion de l'article
+			bibliography: les sources de l'article
+
+
+		Le parsing en .xml contient:
+
+			<article>
+      				<preamble> Le nom du fichier d’origine </preamble>
+				<titre> Le titre du papier </titre>
+				<auteur> La section auteurs et leur adresse</auteur>
+				<abstract> Le résumé de l’article</abstract>
+				<introduction> La introduction</introduction>
+				<corps> Le développement du papier</corps>
+				<conclusion> La conclusion du papier</conclusion>
+				<discussion> La discussion du papier</discussion>
+				<biblio> Les références bibliographiques du papier</biblio>
+			</article>
