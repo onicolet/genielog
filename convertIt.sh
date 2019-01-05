@@ -1,7 +1,7 @@
-#! /bin/bash
+#!/bin/bash
 
 echo "
-  _                       ___ ___ 
+                          ___ ___ 
  /   _  ._      _  ._ _|_  |   |  
  \_ (_) | | \/ (/_ |   |_ _|_  |  
 "
@@ -24,18 +24,47 @@ fi
 var="$2"
 rep="PARSE"
 
+indice="1"
+
+rm listeFile.txt
+
 for file in *.pdf
 do
-	# Demande à l'utilisateur s'il souhaite parser le fichier courant
-	read -p "Voulez-vous parser $file ? (y/n) " answer
-	while [ "$answer" != "y" ] && [ "$answer" != "yes" ] && [ "$answer" != "n" ] && [ "$answer" != "no" ]
-	do
-		echo "Mauvaise entrée, réessayez à nouveau"
-		read -p "Voulez-vous parser $file ? (y/n) " answer
-	done
-	if [ "$answer" == "y" ] || [ "$answer" == "yes" ]
-	then
+	echo $indice $file
+	echo -e $indice":"$file >> listeFile.txt
+	let indice=$indice+1
+done
 
+
+declare -a tab
+i=0
+
+# Demande à l'utilisateur l'index du fichier a parser, finis par -1
+while [ "$answer" !=  "-1" ]
+do
+	read -p "Entrez un numéro de fichier à parser, ou -1 pour lancer le parsing: " answer
+	if [ "$answer" == "-1" ]
+	then
+		echo "Lancement du parsing"
+	elif [ "$answer" -lt "$indice" -a "$answer" -gt "0" ]
+	then
+		pdf="`cat listeFile.txt | head -n $answer | tail -n 1 | cut -f2 -d":"`"
+		tab[$i]="$pdf"
+		let i=$i+1	
+	else
+		echo "Mauvaise entrée"
+	fi
+done
+
+for f in "${tab[@]}"
+do
+	echo $f
+done
+
+
+for file in "${tab[@]}"
+do
+	echo "Traitement du fichier: "$file
 		if [ "$var" == "-x" ]
 		then
 			fileNameBuffer=`basename "$file" ".pdf"`".data"
@@ -51,20 +80,22 @@ do
 			echo -e "\t<preamble> $file </preamble>" >> "XML/$fileNameBuffer"
 			echo -e "\n</article>" >> "XML/$fileNameBuffer"
 			rep="XML"
+			
 			# On renomme l'extension du fichier
 			mv "XML/$fileNameBuffer" "XML/$fileNameFinal"
 		elif [ "$var" == "-t" ]
 		then
-			nameFile=`basename "$file" ".pdf"`".txt"
-	
+			fileNameBuffer=`basename "$file" ".pdf"`".txt"
+
 			#A executer sur le raspberry
-			pdf2txt.py  -p 1 -V -o "CONVERT/$nameFile" "$file"
-			#pdf2txt  -V -o "CONVERT/$nameFile" "$file"
-			echo "$file" > "PARSE/$nameFile"
+			pdf2txt.py  -p 1 -V -o "CONVERT/$fileNameBuffer" "$file"
+			#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
+			echo "$file" > "PARSE/$fileNameBuffer"
+			rep="TXT"
 		else
 			echo "Exécutez avec -t pour une sortie texte ou -x pour une sortie xml"
+			exit
 		fi
 		"../genielog/convertIt" "CONVERT/$fileNameBuffer" "$rep/$fileNameBuffer" "$2"
-	fi
 done
 
