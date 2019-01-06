@@ -29,9 +29,13 @@ void Structure::getBiblioViaScript(string fichierResultat, string FileName) {
 	
 	while (!file.eof()) {
 		getline(file, line);
-		if (line.compare(strcmp1)){
-			found = true;
-			reference.push_back(line);
+		if (line.compare(strcmp1)==0 || found){
+			if (! found){
+				found = true;
+			}
+			else if (found && !line.empty()){
+				reference.push_back(line);	
+			}
 		}
 	}
 
@@ -45,15 +49,15 @@ void Structure::getBiblioViaScript(string fichierResultat, string FileName) {
 
 
 void Structure::writeFile(string FileName, vector<string> reference) {
-	 std::ofstream out;
-	 out.open(FileName, std::ios::app);
+	std::ofstream out;
+	out.open(FileName, std::ios::app);
 
-	 out << "Bibliography: " << endl;
-	 for (unsigned int z = 0; z<reference.size(); ++z)
-		 out << reference[z] << endl;
+	out << "Bibliography: " << endl;
+	for (unsigned int z = 0; z<reference.size(); ++z)
+		out << reference[z] << endl;
 
-	 out << endl;
-	 out.close();
+	out << endl;
+	out.close();
 }
 
 
@@ -64,7 +68,7 @@ void Structure::writeFileX(string FileName,vector<string> reference) {
 	 out << "	<biblio>" << endl;
 	 for (unsigned int z = 0; z < reference.size(); ++z)
 		 out << "		" << reference[z] << endl;
-	 out << " </biblio>" << endl;
+	 out << "	</biblio>" << endl;
 
 	 out.close();
 }
@@ -140,15 +144,15 @@ void Structure::getIntroductionViaScript(string fichierResultat, string fileName
 	} // Fin de la boucle alimentant l'introduction
 
 	if (param == 1)
-		writeFileIntroductionX(fileName, introduction);
+		writeIntroductionInFileX(fileName, introduction);
 	else
-		writeFileIntroduction(fileName, introduction);
+		writeIntroductionInFile(fileName, introduction);
 }
 
 
 void Structure::writeIntroductionInFileX(string FileName, vector<string> introduction) {
 	// Déclaration du flux d'écriture
-	std::oftsream out;
+	std::ofstream out;
 
 	// Initialisation du flux de sortie vers le fichier .xml
 	out.open(FileName, std::ios::app);
@@ -165,7 +169,7 @@ void Structure::writeIntroductionInFileX(string FileName, vector<string> introdu
 
 
 void Structure::writeIntroductionInFile(string FileName, vector<string> introduction) {
-	std::oftsream out;
+	std::ofstream out;
 
 	// Initialisation du flux de sortie vers le fichier .xml
 	out.open(FileName, std::ios::app);

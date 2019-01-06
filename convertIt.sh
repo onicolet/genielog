@@ -9,13 +9,18 @@ echo "
 
 cd $1
 
+#contient les fichiers txt brut
 if [ ! -d "CONVERT" ]
 then
 	mkdir "CONVERT"
-elif [ ! -d "PARSE" ]
+fi
+#Contient les fichiers txt parsés
+if [ ! -d "TXT" ]
 then
-	mkdir "PARSE"
-elif [ ! -d "XML" ]
+	mkdir "TXT"
+fi
+#contient les fichiers xml parsés
+if [ ! -d "XML" ]
 then
 	mkdir "XML"
 fi
@@ -67,35 +72,39 @@ do
 	echo "Traitement du fichier: "$file
 		if [ "$var" == "-x" ]
 		then
+			rep="XML"
 			fileNameBuffer=`basename "$file" ".pdf"`".data"
-			fileNameFinal=`basename "$file" ".pdf"`".xml"
+			fileNameFinal=`basename "$fileNameBuffer" ".data"`".xml"
 
 			#A executer sur le raspberry
-			pdf2txt.py  -p 1 -V -o "CONVERT/$fileNameBuffer" "$file"
+			pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
 			#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
 
 			# Initialisation du fichier de sortie
 			echo -e "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" > "XML/$fileNameBuffer"
 			echo "<article>" >> "XML/$fileNameBuffer"
-			echo -e "\t<preamble> $file </preamble>" >> "XML/$fileNameBuffer"
-			echo -e "\n</article>" >> "XML/$fileNameBuffer"
-			rep="XML"
+			echo -e "\t<preamble> \n\t\t$file \n\t</preamble>" >> "XML/$fileNameBuffer"
 			
-			# On renomme l'extension du fichier
-			mv "XML/$fileNameBuffer" "XML/$fileNameFinal"
 		elif [ "$var" == "-t" ]
 		then
+			rep="TXT"
 			fileNameBuffer=`basename "$file" ".pdf"`".txt"
 
 			#A executer sur le raspberry
-			pdf2txt.py  -p 1 -V -o "CONVERT/$fileNameBuffer" "$file"
+			pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
 			#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
-			echo "$file" > "PARSE/$fileNameBuffer"
-			rep="TXT"
+			echo "Preamble: $file" > "$rep/$fileNameBuffer"
 		else
 			echo "Exécutez avec -t pour une sortie texte ou -x pour une sortie xml"
 			exit
 		fi
-		"../genielog/convertIt" "CONVERT/$fileNameBuffer" "$rep/$fileNameBuffer" "$2"
+	
+		./../genielog/convertIt "CONVERT/$fileNameBuffer" "$rep/$fileNameBuffer" "$2"
+		if [ "$2" == "-x" ]
+		then
+			echo -e "\n</article>" >> "XML/$fileNameBuffer"
+			# On renomme l'extension du fichier
+			mv "$rep/$fileNameBuffer" "$rep/$fileNameFinal"
+		fi
 done
 
