@@ -77,8 +77,8 @@ do
 			fileNameFinal=`basename "$fileNameBuffer" ".data"`".xml"
 
 			#A executer sur le raspberry
-			pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
-			#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
+			#pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
+			pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
 
 			# Initialisation du fichier de sortie
 			echo -e "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" > "XML/$fileNameBuffer"
@@ -91,15 +91,17 @@ do
 			fileNameBuffer=`basename "$file" ".pdf"`".txt"
 
 			#A executer sur le raspberry
-			pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
-			#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
+			#pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
+			pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
 			echo "Preamble: $file" > "$rep/$fileNameBuffer"
 		else
 			echo "Exécutez avec -t pour une sortie texte ou -x pour une sortie xml"
 			exit
 		fi
-	
-		./../genielog/convertIt "CONVERT/$fileNameBuffer" "$rep/$fileNameBuffer" "$2"
+		
+		ConclusionLine=`cat "CONVERT/$fileNameBuffer" | egrep -n "Conclusion|CONCLUSION" | cut -f1 -d":" | tail -n 1`
+		./../genielog/convertIt "CONVERT/$fileNameBuffer" "$rep/$fileNameBuffer" "$2" $ConclusionLine
+		echo "Conclusion ligne: " $ConclusionLine
 		if [ "$2" == "-x" ]
 		then
 			echo -e "\n</article>" >> "XML/$fileNameBuffer"
