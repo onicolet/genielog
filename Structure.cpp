@@ -77,11 +77,13 @@ void Structure::writeFileX(string FileName,vector<string> reference) {
 
 // --------- VERIFICATION DE CONTENU ---------
 bool catchSection(string currentLine, vector<string> cmp) {
-	// Si détection d'une chaîne définie dans le dictionnaire cmp on retourne VRAI
-	for (int index=0; index < cmp.size(); index++)
+cout << "80" << endl;	
+// Si détection d'une chaîne définie dans le dictionnaire cmp on retourne VRAI
+	for (unsigned int index=0; index < cmp.size(); index++)
 		if (cmp[index].compare(currentLine)==0)
 			return true;
 	
+cout << "86" << endl;	
 	// Sinon on retourne FAUX
 	return false;
 }
@@ -89,38 +91,49 @@ bool catchSection(string currentLine, vector<string> cmp) {
 
 
 // --------- INTRODUCTION ---------
-void Structure::getIntroductionViaScript(string fichierResultat, string fileName) {
+void Structure::getCorpsViaScript(string fichierResultat, string fileName, int nbLigneConclusion) {
 	// Déclaration
 	ifstream file;
 	bool sectionFound;
+	int n = 0;
+
+	// Booleans
+	bool corps = false;
+	bool introduction= false;
+	bool conclusion= false;
+
 	int index; // Compteur indicant la fin de l'introduction
 	string currentLine;
-	vector<string> introduction, stringToCompareWith;
+	vector<string> introductionVec, corpsVec, conclusionVec, stringToCompareWithIntro,stringToCompareWithRef;
 
 	// Initialisation
-	sectionFound=false;
 	index=0;
 	file.open(fichierResultat);
-	// Dictionnaire de comparaison
-	stringToCompareWith.push_back("1 INTRODUCTION");
-	stringToCompareWith.push_back("1 Introduction");
-	stringToCompareWith.push_back("1. Introduction");
-	stringToCompareWith.push_back("1. INTRODUCTION"); 
-	stringToCompareWith.push_back("I Introduction");
-	stringToCompareWith.push_back("I INTRODUCTION");
-	stringToCompareWith.push_back("I. Introduction");
-	stringToCompareWith.push_back("I. INTRODUCTION");
+
+	// Dictionnaire de comparaison (references)
+	stringToCompareWithRef.push_back("References");
+
+	// Dictionnaire de comparaison (introduction)
+	stringToCompareWithIntro.push_back("1 INTRODUCTION");
+	stringToCompareWithIntro.push_back("1 Introduction");
+	stringToCompareWithIntro.push_back("1. Introduction");
+	stringToCompareWithIntro.push_back("1. INTRODUCTION"); 
+	stringToCompareWithIntro.push_back("I Introduction");
+	stringToCompareWithIntro.push_back("I INTRODUCTION");
+	stringToCompareWithIntro.push_back("I. Introduction");
+	stringToCompareWithIntro.push_back("I. INTRODUCTION");
 	
 	while (!file.eof()) {
 		getline(file, currentLine);
+		n++;
 	 
-	 	if (catchSection(currentLine, stringToCompareWith) || sectionFound) {
-	 		sectionFound = true;
+	 	if (catchSection(currentLine, stringToCompareWithIntro) || introduction) {
+	 		introduction = true;
 
 			/* Si on détecte un point en fin de ligne, on incrémente 
 			 * l'index 
 			 * */
-			if (currentLine.substr(currentLine.size()-1, 1) == ".")
+			if (!currentLine.empty()  && currentLine.substr(currentLine.size()-1, 1) == ".")
 				index++;
 			// Si la ligne courante est vide et que l'index est > 0
 			if (index>0 && currentLine.empty())
@@ -131,22 +144,58 @@ void Structure::getIntroductionViaScript(string fichierResultat, string fileName
 			 * "II " ou encore  "II." alors l'introduction est considérée
 			 * comme terminée 
 		 	 * */
-			if (	index >= 2 
-				&& !currentLine.empty() 
+			if ( !currentLine.empty() 
 				&& (currentLine.substr(0,2)=="2." 
 					|| currentLine.substr(0,2)=="2 " 
 					|| currentLine.substr(0,3)=="II."
 					|| currentLine.substr(0,3)=="II "))
-				break;
+			{
+				introduction = false;
+				corps = true;
+			}
 			else  // Sinon on réinitialise le compteur à zéro
+			{
+				introductionVec.push_back(currentLine);
 				index = 0;
+			}
+		}
+		if(n == nbLigneConclusion || conclusion)
+		{
+			if(conclusion == false)
+			{
+				corps = false;
+				conclusion = true;
+			}
+			if(catchSection(currentLine, stringToCompareWithRef))
+			{
+				break;
+			}
+			else
+			{
+				conclusionVec.push_back(currentLine);
+			}
+		}
+		if(corps)
+		{
+			corpsVec.push_back(currentLine);
+			n++;
 		}
 	} // Fin de la boucle alimentant l'introduction
 
 	if (param == 1)
-		writeIntroductionInFileX(fileName, introduction);
+		writeIntroductionInFileX(fileName, introductionVec);
 	else
-		writeIntroductionInFile(fileName, introduction);
+		writeIntroductionInFile(fileName, introductionVec);
+
+	if (param == 1)
+		writeBodyInFileX(fileName, corpsVec);
+	else
+		writeBodyInFile(fileName, corpsVec);
+
+	if (param == 1)
+		writeConclusionInFileX(fileName, conclusionVec);
+	else
+		writeConclusionInFile(fileName, conclusionVec);
 }
 
 
@@ -158,10 +207,10 @@ void Structure::writeIntroductionInFileX(string FileName, vector<string> introdu
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de l'introduction dans le fichier .xml
-	out << "	<introduction>" << endl;
+	out << "\n\t<introduction>" << endl;
 	for (unsigned int index=0; index < introduction.size(); index++)
-		out << "		" << introduction[index] << endl;
-	out << "	</introduction>" << endl;
+		out << "\n\t\t" << introduction[index] << endl;
+	out << "\n\t</introduction>" << endl;
 
 	// Fermeture du fichier .xml
 	out.close();
@@ -184,33 +233,69 @@ void Structure::writeIntroductionInFile(string FileName, vector<string> introduc
 }
 
 
-
-// --------- CORPS ---------
-void Structure::getBodyViaScript(string outputFile, string inputFile) {
-
-}
-
-
 void Structure::writeBodyInFileX(string FileName, vector<string> body) {
+	// Déclaration du flux d'écriture
+	std::ofstream out;
 
+	// Initialisation du flux de sortie vers le fichier .xml
+	out.open(FileName, std::ios::app);
+	
+	// Ecriture de body dans le fichier .xml
+	out << "\n\t<body>" << endl;
+	for (unsigned int index=0; index < body.size(); index++)
+		out << "\n\t\t" << body[index] << endl;
+	out << "\n\t</body>" << endl;
+
+	// Fermeture du fichier .xml
+	out.close();
 }
 
 
 void Structure::writeBodyInFile(string FileName, vector<string> body) {
+	std::ofstream out;
 
-}
+	// Initialisation du flux de sortie vers le fichier .xml
+	out.open(FileName, std::ios::app);
+	
+	// Ecriture de body dans le fichier .xml
+	out << "Body: " << endl;
+	for (unsigned int index=0; index < body.size(); index++)
+		out << body[index] << endl;
 
-
-void Structure::getConclusionViaScript(string outputFile, string inputFile) {
-
+	// Fermeture du fichier .xml
+	out.close();
 }
 
 
 void Structure::writeConclusionInFileX(string FileName, vector<string> conclusion) {
+	// Déclaration du flux d'écriture
+	std::ofstream out;
 
+	// Initialisation du flux de sortie vers le fichier .xml
+	out.open(FileName, std::ios::app);
+	
+	// Ecriture de conclusion dans le fichier .xml
+	out << "\n\t<conclusion>" << endl;
+	for (unsigned int index=0; index < conclusion.size(); index++)
+		out << "\n\t\t" << conclusion[index] << endl;
+	out << "\n\t</conclusion>" << endl;
+
+	// Fermeture du fichier .xml
+	out.close();
 }
 
 
 void Structure::writeConclusionInFile(string FileName, vector<string> conclusion) {
+	std::ofstream out;
 
+	// Initialisation du flux de sortie vers le fichier .xml
+	out.open(FileName, std::ios::app);
+	
+	// Ecriture de conclusion dans le fichier .xml
+	out << "conclusion:" << endl;
+	for (unsigned int index=0; index < conclusion.size(); index++)
+		out << conclusion[index] << endl;
+
+	// Fermeture du fichier .xml
+	out.close();
 }

@@ -23,15 +23,13 @@ public:
 	void writeFile(string, vector<string>);
 	void writeFileX(string, vector<string>);
 
-	void getIntroductionViaScript(string, string);
+	void getCorpsViaScript(string, string, int);
 	void writeIntroductionInFile(string, vector<string>);
 	void writeIntroductionInFileX(string, vector<string>);
 
-	void getBodyViaScript(string, string);
 	void writeBodyInFile(string, vector<string>);
 	void writeBodyInFileX(string, vector<string>);
 
-	void getConclusionViaScript(string, string);
 	void writeConclusionInFileX(string, vector<string>);
 	void writeConclusionInFile(string, vector<string>);
 };
