@@ -89,7 +89,7 @@ void Auteur::writeFileAuteur(string FileName, vector<string> auteur) {
 	 std::ofstream out;
 	 out.open(FileName, std::ios::app);
 
-	 out << "Author: " ;
+	 out << "\nAuthor: " ;
 	 for (unsigned int z = 0; z<auteur.size(); ++z)
 		 out << auteur[z];
 
@@ -101,11 +101,11 @@ void Auteur::writeFileAbstractX(string FileName, vector<string> abstract) {
 	 std::ofstream out;
 	 out.open(FileName, std::ios::app);
 
-	 out << "	<abstract> " ;
+	 out << "\n\t<abstract> " ;
 	 for (unsigned int z = 0; z<abstract.size(); ++z)
-		 out << abstract[z];
+		 out << "\n\t\t" << abstract[z];
 
-	 out << " </abstract>" << endl;
+	 out << "\n\t</abstract>" << endl;
 	 out.close();
 }
 
@@ -114,11 +114,11 @@ void Auteur::writeFileAuteurX(string FileName, vector<string> auteur) {
 	 std::ofstream out;
 	 out.open(FileName, std::ios::app);
 
-	 out << "	<auteur> " ;
+	 out << "\n\t<auteur> " ;
 	 for (unsigned int z = 0; z<auteur.size(); ++z)
-		 out << auteur[z];
+		 out << "\n\t\t" << auteur[z];
 
-	 out << " </auteur>" << endl;
+	 out << "\n\t</auteur>" << endl;
 	 out.close();
 }
 

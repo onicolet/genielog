@@ -26,7 +26,7 @@ void Structure::getBiblioViaScript(string fichierResultat, string FileName) {
 	
 	while (!file.eof()) {
 		getline(file, line);
-		if (line.compare(strcmp1)){
+		if (line.compare(strcmp1)==0 || found){
 			found = true;
 			reference.push_back(line);
 		}
@@ -45,7 +45,7 @@ void Structure::writeFile(string FileName, vector<string> reference) {
 	 std::ofstream out;
 	 out.open(FileName, std::ios::app);
 
-	 out << "Bibliography: ";
+	 out << "\nBibliography: ";
 	 for (unsigned int z = 0; z<reference.size(); ++z)
 		 out << reference[z];
 
@@ -58,11 +58,11 @@ void Structure::writeFileX(string FileName,vector<string> reference) {
 	 std::ofstream out;
 	 out.open(FileName, std::ios::app);
 
-	 out << "	<biblio> ";
+	 out << "\n\t<biblio> ";
 	
 	 for (unsigned int z = 0; z<reference.size(); ++z)
-		 out << reference[z];
+		 out << "\n\t\t"  << reference[z];
 
-	 out << " </biblio>" << endl;
+	 out << "\n\t</biblio>" << endl;
 	 out.close();
 }

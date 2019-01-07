@@ -12,7 +12,6 @@ int main(int argc,const char* argv[]) {
 
 	titre.getTitreViaScript(file, fileName);
 	struc.getBiblioViaScript(file, fileName);
-	auteur.getAbstractViaScript(file, fileName);
-	
+	auteur.getAbstractViaScript(file, fileName);	
 	auteur.getAuteurViaScript(file, fileName);
 }

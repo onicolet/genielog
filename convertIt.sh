@@ -25,7 +25,7 @@ then
 		fileNameFinal=`basename "$file" ".pdf"`".xml"
 
 		#A executer sur le raspberry
-		pdf2txt.py  -p 1 -V -o "CONVERT/$fileNameBuffer" "$file"
+		pdf2txt.py -V -o "CONVERT/$fileNameBuffer" "$file"
 		#pdf2txt  -V -o "CONVERT/$fileNameBuffer" "$file"
 
 		# Initialisation du fichier de sortie
@@ -45,7 +45,7 @@ then
 		nameFile=`basename "$file" ".pdf"`".txt"
 	
 		#A executer sur le raspberry
-		pdf2txt.py  -p 1 -V -o "CONVERT/$nameFile" "$file"
+		pdf2txt.py -V -o "CONVERT/$nameFile" "$file"
 		#pdf2txt  -V -o "CONVERT/$nameFile" "$file"
 		echo "$file" > "PARSE/$nameFile"
 		
