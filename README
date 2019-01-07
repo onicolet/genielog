@@ -36,7 +36,7 @@ Versionnement:
 
 
 
-	Version 2 - git checkout V2
+	Version 2 - git checkout newV2
 
 		L'application demande un paramêtre avant de parser pour choisir le format de destination
 		
