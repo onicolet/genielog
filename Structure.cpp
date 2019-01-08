@@ -16,7 +16,64 @@ Structure::Structure(string par) {
 
 Structure::~Structure() {}
 
+// --------- ABSTRACT ---------
+void Structure::getAbstractViaScript(string fichierResultat, string FileName) {
+	ifstream file;
+	bool found=false;
+	vector<string> abstract;
+	string line, strcompare, cmp1 = "Abstract", cmp2 = "ABSTRACT";
+	file.open(fichierResultat);
+	int i = 0;
 
+	while (!file.eof()) {
+		getline(file, line);
+		strcompare = line.substr(0,8);
+
+		if ((cmp1.compare(strcompare)==0||cmp2.compare(strcompare)==0) || found) {
+			found = true;
+
+			if (line.empty() && !abstract.empty()) {
+				break; 
+			} else if (!line.empty()) { 	
+				if (i != 0)
+					abstract.push_back(line);
+				i++;
+			}
+		}
+	}
+
+	file.close();
+	
+	if(param == 1)
+		writeFileAbstractX(FileName,abstract);
+	else
+		writeFileAbstract(FileName,abstract);
+}
+
+
+void Structure::writeFileAbstract(string FileName, vector<string> abstract) {
+	 std::ofstream out;
+	 out.open(FileName, std::ios::app);
+
+	 out << "Abstract: " ;
+	 for (unsigned int z = 0; z<abstract.size(); ++z)
+		 out << abstract[z];
+
+	 out.close();
+}
+
+
+void Structure::writeFileAbstractX(string FileName, vector<string> abstract) {
+	 std::ofstream out;
+	 out.open(FileName, std::ios::app);
+
+	 out << "	<abstract> " ;
+	 for (unsigned int z = 0; z<abstract.size(); ++z)
+		 out << abstract[z];
+
+	 out << " </abstract>" << endl;
+	 out.close();
+}
 
 // --------- BIBLIOGRAPHIE ---------
 void Structure::getBiblioViaScript(string fichierResultat, string FileName) {

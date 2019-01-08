@@ -19,6 +19,10 @@ public:
 	Structure(string);
 	~Structure();
 
+	void getAbstractViaScript(string, string);
+	void writeFileAbstract(string, vector<string>);
+	void writeFileAbstractX(string, vector<string>);
+
 	void getBiblioViaScript(string, string);
 	void writeFile(string, vector<string>);
 	void writeFileX(string, vector<string>);
