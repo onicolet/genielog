@@ -7,6 +7,11 @@ Auteurs:
 	Tramier Antoine
 
 
+Guide utilisateur:
+
+	Placez-vous dans le dossier du programme.
+	Via terminal au répertoire, lancez la commande shell:  ./convertIt [ Chemin vers le dossier contenant les .pdf ] [ Option ]
+
 
 Description fonctionnelle:
 
