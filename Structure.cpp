@@ -105,11 +105,20 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 
 	int index; // Compteur indicant la fin de l'introduction
 	string currentLine;
-	vector<string> introductionVec, corpsVec, conclusionVec, stringToCompareWithIntro,stringToCompareWithRef;
+	vector<string> introductionVec, corpsVec, conclusionVec, stringToCompareWithIntro,stringToCompareWithRef, stringToCompareWithConclusion;
 
 	// Initialisation
 	index=0;
 	file.open(fichierResultat);
+
+	// Dictionnaire de comparaison (conclusion)
+	stringToCompareWithConclusion.push_back("Conclusion");
+	stringToCompareWithConclusion.push_back("Conclusions");
+	stringToCompareWithConclusion.push_back("conclusion");
+	stringToCompareWithConclusion.push_back("conclusions");
+	stringToCompareWithConclusion.push_back("CONCLUSION");
+	stringToCompareWithConclusion.push_back("CONCLUSIONS");
+
 
 	// Dictionnaire de comparaison (references)
 	stringToCompareWithRef.push_back("References");
@@ -168,7 +177,7 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 					index = 0;
 			}
 		}
-		if(n == nbLigneConclusion || conclusion)
+		if(conclusion)
 		{
 			if(conclusion == false)
 			{
@@ -186,7 +195,15 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 		}
 		if(corps)
 		{
-			corpsVec.push_back(currentLine);
+			if (catchSection(currentLine, stringToCompareWithConlusion))
+			{
+				conclusion = true;
+				corps = false;
+			}
+			else
+			{
+				corpsVec.push_back(currentLine);
+			}
 		}
 	} // Fin de la boucle alimentant l'introduction
 
