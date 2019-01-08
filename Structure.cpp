@@ -21,7 +21,7 @@ Structure::~Structure() {}
 // --------- BIBLIOGRAPHIE ---------
 void Structure::getBiblioViaScript(string fichierResultat, string FileName) {
 	ifstream file;
-	string line, strcmp1 = "References";
+	string line, strcmp1 = "References", strcmp2 = "REFERENCES";
 	vector<string> reference;
 	bool found = false;
 	
@@ -29,7 +29,7 @@ void Structure::getBiblioViaScript(string fichierResultat, string FileName) {
 	
 	while (!file.eof()) {
 		getline(file, line);
-		if (line.compare(strcmp1)==0 || found){
+		if (line.compare(strcmp1)==0|| line.compare(strcmp2) == 0 || found){
 			if (! found){
 				found = true;
 			}
