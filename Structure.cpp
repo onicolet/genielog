@@ -101,6 +101,7 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 	bool corps = false;
 	bool introduction= false;
 	bool conclusion= false;
+	bool incrementationIndex = false;
 
 	int index; // Compteur indicant la fin de l'introduction
 	string currentLine;
@@ -126,25 +127,32 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 	while (!file.eof()) {
 		getline(file, currentLine);
 		n++;
+		incrementationIndex = false;
 	 
-	 	if (catchSection(currentLine, stringToCompareWithIntro) || introduction) {
-	 		introduction = true;
+		if (catchSection(currentLine, stringToCompareWithIntro) || introduction) {
+			introduction = true;
 
-			/* Si on détecte un point en fin de ligne, on incrémente 
-			 * l'index 
+			/* Si on détecte un point en fin de ligne, on incrémente
+			 * l'index
 			 * */
-			if (!currentLine.empty()  && currentLine.substr(currentLine.size()-1, 1) == ".")
+			if (!currentLine.empty() && currentLine.substr(currentLine.size() - 1, 1) == ".")
+			{
 				index++;
+				incrementationIndex = true;
+			}
 			// Si la ligne courante est vide et que l'index est > 0
-			if (index>0 && currentLine.empty())
+			if (index > 0 && currentLine.empty())
+			{
 				index++;
+				incrementationIndex = true;
+			}
 
 			/* Si l'index est supérieur ou égal à 2 et que les premiers 
 			 * caractères de la ligne courante commencent par "2 ", "2.",
 			 * "II " ou encore  "II." alors l'introduction est considérée
 			 * comme terminée 
 		 	 * */
-			if ( !currentLine.empty() 
+			if (index >= 2 && !currentLine.empty() 
 				&& (currentLine.substr(0,2)=="2." 
 					|| currentLine.substr(0,2)=="2 " 
 					|| currentLine.substr(0,3)=="II."
@@ -156,7 +164,8 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 			else  // Sinon on réinitialise le compteur à zéro
 			{
 				introductionVec.push_back(currentLine);
-				index = 0;
+				if(!incrementationIndex)
+					index = 0;
 			}
 		}
 		if(n == nbLigneConclusion || conclusion)
@@ -178,7 +187,6 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 		if(corps)
 		{
 			corpsVec.push_back(currentLine);
-			n++;
 		}
 	} // Fin de la boucle alimentant l'introduction
 
