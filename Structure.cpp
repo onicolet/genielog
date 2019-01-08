@@ -194,7 +194,7 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 		}
 		if(corps)
 		{
-			if (catchSection(currentLine, stringToCompareWithConclusion))
+			if (catchSection(currentLine, stringToCompareWithConclusion) || n ==nbLigneConclusion)
 			{
 				conclusion = true;
 				corps = false;
