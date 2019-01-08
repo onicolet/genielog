@@ -76,14 +76,12 @@ void Structure::writeFileX(string FileName,vector<string> reference) {
 
 
 // --------- VERIFICATION DE CONTENU ---------
-bool catchSection(string currentLine, vector<string> cmp) {
-cout << "80" << endl;	
+bool catchSection(string currentLine, vector<string> cmp) {	
 // Si détection d'une chaîne définie dans le dictionnaire cmp on retourne VRAI
 	for (unsigned int index=0; index < cmp.size(); index++)
 		if (cmp[index].compare(currentLine)==0)
 			return true;
-	
-cout << "86" << endl;	
+		
 	// Sinon on retourne FAUX
 	return false;
 }
@@ -195,7 +193,7 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 		}
 		if(corps)
 		{
-			if (catchSection(currentLine, stringToCompareWithConlusion))
+			if (catchSection(currentLine, stringToCompareWithConclusion))
 			{
 				conclusion = true;
 				corps = false;
