@@ -120,6 +120,7 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 
 	// Dictionnaire de comparaison (references)
 	stringToCompareWithRef.push_back("References");
+	stringToCompareWithRef.push_back("REFERENCES");
 
 	// Dictionnaire de comparaison (introduction)
 	stringToCompareWithIntro.push_back("1 INTRODUCTION");
