@@ -232,7 +232,7 @@ void Structure::writeIntroductionInFileX(string FileName, vector<string> introdu
 	// Ecriture de l'introduction dans le fichier .xml
 	out << "\n\t<introduction>" << endl;
 	for (unsigned int index=0; index < introduction.size(); index++)
-		out << "\t\t" << introduction[index];
+		out << "\t\t\n" << introduction[index];
 	out << "\n\t</introduction>" << endl;
 
 	// Fermeture du fichier .xml
@@ -266,7 +266,7 @@ void Structure::writeBodyInFileX(string FileName, vector<string> body) {
 	// Ecriture de body dans le fichier .xml
 	out << "\n\t<body>" << endl;
 	for (unsigned int index=0; index < body.size(); index++)
-		out << "\t\t" << body[index];
+		out << "\t\t\n" << body[index];
 	out << "\n\t</body>" << endl;
 
 	// Fermeture du fichier .xml
@@ -300,7 +300,7 @@ void Structure::writeConclusionInFileX(string FileName, vector<string> conclusio
 	// Ecriture de conclusion dans le fichier .xml
 	out << "\n\t<conclusion>" << endl;
 	for (unsigned int index=0; index < conclusion.size(); index++)
-		out << "\t\t" << conclusion[index];
+		out << "\t\t\n" << conclusion[index];
 	out << "\n\t</conclusion>" << endl;
 
 	// Fermeture du fichier .xml
