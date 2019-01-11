@@ -32,12 +32,12 @@ then
 fi
 # Création du dossier contenant les sorties de pdf2txt, s'il 
 # n'existait pas.
-if [ ! -d $1"CONVERT" ]
+if [ ! -d "$srcRep" ]
 then
 	mkdir "$srcRep"
 fi
 # Contient les fichiers txt parsés
-if [ ! -d $destRep ]
+if [ ! -d "$destRep" ]
 then
 	mkdir "$destRep"
 fi
