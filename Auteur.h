@@ -13,11 +13,13 @@ class Auteur {
 private:
 	int param;
 public:
-
-	void getAuteurViaScript(string fichierResultat,string);
-	void writeFileAuteur(string FileName, vector<string> abstract);
+	void getAbstractViaScript(string,string);
+	void getAuteurViaScript(string ,string,int);
+	void writeFileAbstract(string, vector<string> );
+	void writeFileAbstractX(string, vector<string>);
+	void writeFileAuteur(string , vector<string>);
 	void writeFileAuteurX(string, vector<string>);
-
+	bool catchSection2(string , vector<string>) ;
 	Auteur();
 	Auteur(string);
 	~Auteur();

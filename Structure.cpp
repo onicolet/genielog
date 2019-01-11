@@ -16,86 +16,49 @@ Structure::Structure(string par) {
 
 Structure::~Structure() {}
 
-// --------- ABSTRACT ---------
-void Structure::getAbstractViaScript(string fichierResultat, string FileName) {
-	ifstream file;
-	bool found=false;
-	vector<string> abstract;
-	string line, strcompare, cmp1 = "Abstract", cmp2 = "ABSTRACT";
-	file.open(fichierResultat);
-	int i = 0;
 
-	while (!file.eof()) {
-		getline(file, line);
-		strcompare = line.substr(0,8);
 
-		if ((cmp1.compare(strcompare)==0||cmp2.compare(strcompare)==0) || found) {
-			found = true;
+// --------- VERIFICATION DE CONTENU ---------
+bool catchSection(string currentLine, vector<string> cmp) {	
+// Si détection d'une chaîne définie dans le dictionnaire cmp on retourne VRAI
 
-			if (line.empty() && !abstract.empty()) {
-				break; 
-			} else if (!line.empty()) { 	
-				if (i != 0)
-					abstract.push_back(line);
-				i++;
-			}
-		}
-	}
-
-	file.close();
-	
-	if(param == 1)
-		writeFileAbstractX(FileName,abstract);
-	else
-		writeFileAbstract(FileName,abstract);
+	for (unsigned int index=0; index < cmp.size(); index++)
+		if (cmp[index].compare(currentLine)==0)
+			return true;
+		
+	// Sinon on retourne FAUX
+	return false;
 }
 
 
-void Structure::writeFileAbstract(string FileName, vector<string> abstract) {
-	 std::ofstream out;
-	 out.open(FileName, std::ios::app);
-
-	 out << "Abstract: " ;
-	 for (unsigned int z = 0; z<abstract.size(); ++z)
-		 out << abstract[z];
-
-	 out.close();
-}
 
 
-void Structure::writeFileAbstractX(string FileName, vector<string> abstract) {
-	 std::ofstream out;
-	 out.open(FileName, std::ios::app);
 
-	 out << "	<abstract> " ;
-	 for (unsigned int z = 0; z<abstract.size(); ++z)
-		 out << abstract[z];
-
-	 out << " </abstract>" << endl;
-	 out.close();
-}
 
 // --------- BIBLIOGRAPHIE ---------
-void Structure::getBiblioViaScript(string fichierResultat, string FileName) {
+void Structure::getBiblioViaScript(string fichierResultat, string FileName,int ligneActuel) {
 	ifstream file;
-	string line, strcmp1 = "References", strcmp2 = "REFERENCES";
-	vector<string> reference;
+	vector<string> reference, dicRef;
+	string line;
+	int n = 0;
+	int n2 = 0;
 	bool found = false;
+
+	dicRef.push_back("References");
+	dicRef.push_back("REFERENCES");
 	
 	file.open(fichierResultat);
-	
 	while (!file.eof()) {
 		getline(file, line);
-		if (line.compare(strcmp1)==0|| line.compare(strcmp2) == 0 || found){
-			if (! found){
-				found = true;
-			}
-			else if (found && !line.empty()){
+		n++;
+		if (n >= ligneActuel+1 || found || catchSection(line, dicRef)) {
+			found = true;
+			n2++;
+
+			if (n2 > 1)
 				reference.push_back(line);	
-			}
 		}
 	}
-
 	file.close();
 	
 	if(param == 1)
@@ -109,44 +72,31 @@ void Structure::writeFile(string FileName, vector<string> reference) {
 	std::ofstream out;
 	out.open(FileName, std::ios::app);
 
-	out << "Bibliography: " << endl;
+	out << "\n\nBibliography:" << endl;
 	for (unsigned int z = 0; z<reference.size(); ++z)
-		out << reference[z] << endl;
-
+		out << "\t" << reference[z] << endl;
 	out << endl;
+
 	out.close();
 }
 
 
 void Structure::writeFileX(string FileName,vector<string> reference) {
-	 std::ofstream out;
-	 out.open(FileName, std::ios::app);
+	std::ofstream out;
+	out.open(FileName, std::ios::app);
 
-	 out << "	<biblio>" << endl;
-	 for (unsigned int z = 0; z < reference.size(); ++z)
-		 out << "		" << reference[z] << endl;
-	 out << "	</biblio>" << endl;
+	out <<	"\t<biblio>" << endl;
+	for (unsigned int z = 0; z < reference.size(); ++z)
+		out << "\t\t" << reference[z] << endl;
+	out << "\n\t</biblio>" << endl;
 
-	 out.close();
-}
-
-
-
-// --------- VERIFICATION DE CONTENU ---------
-bool catchSection(string currentLine, vector<string> cmp) {	
-// Si détection d'une chaîne définie dans le dictionnaire cmp on retourne VRAI
-	for (unsigned int index=0; index < cmp.size(); index++)
-		if (cmp[index].compare(currentLine)==0)
-			return true;
-		
-	// Sinon on retourne FAUX
-	return false;
+	out.close();
 }
 
 
 
 // --------- INTRODUCTION ---------
-void Structure::getCorpsViaScript(string fichierResultat, string fileName, int nbLigneConclusion) {
+void Structure::getIntroductionViaScript(string fichierResultat, string fileName, int nbLigneConclusion,int nbLigneDiscussion, int nbLigneReference) {
 	// Déclaration
 	ifstream file;
 	bool sectionFound;
@@ -160,26 +110,15 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 
 	int index; // Compteur indicant la fin de l'introduction
 	string currentLine;
-	vector<string> introductionVec, corpsVec, conclusionVec, stringToCompareWithIntro,stringToCompareWithRef, stringToCompareWithConclusion;
+	vector<string> introductionVec, stringToCompareWithIntro;
 
 	// Initialisation
 	index=0;
-	file.open(fichierResultat);
-
-	// Dictionnaire de comparaison (conclusion)
-	stringToCompareWithConclusion.push_back("Conclusion");
-	stringToCompareWithConclusion.push_back("Conclusions");
-	stringToCompareWithConclusion.push_back("conclusion");
-	stringToCompareWithConclusion.push_back("conclusions");
-	stringToCompareWithConclusion.push_back("CONCLUSION");
-	stringToCompareWithConclusion.push_back("CONCLUSIONS");
-
-
-	// Dictionnaire de comparaison (references)
-	stringToCompareWithRef.push_back("References");
-	stringToCompareWithRef.push_back("REFERENCES");
+	int n2=0;
 
 	// Dictionnaire de comparaison (introduction)
+	stringToCompareWithIntro.push_back("Introduction");
+	stringToCompareWithIntro.push_back("INTRODUCTION");
 	stringToCompareWithIntro.push_back("1 INTRODUCTION");
 	stringToCompareWithIntro.push_back("1 Introduction");
 	stringToCompareWithIntro.push_back("1. Introduction");
@@ -188,7 +127,8 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 	stringToCompareWithIntro.push_back("I INTRODUCTION");
 	stringToCompareWithIntro.push_back("I. Introduction");
 	stringToCompareWithIntro.push_back("I. INTRODUCTION");
-	
+
+	file.open(fichierResultat);
 	while (!file.eof()) {
 		getline(file, currentLine);
 		n++;
@@ -196,18 +136,17 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 	 
 		if (catchSection(currentLine, stringToCompareWithIntro) || introduction) {
 			introduction = true;
+			n2++;
 
 			/* Si on détecte un point en fin de ligne, on incrémente
 			 * l'index
 			 * */
-			if (!currentLine.empty() && currentLine.substr(currentLine.size() - 1, 1) == ".")
-			{
+			if (!currentLine.empty() && currentLine.substr(currentLine.size() - 1, 1) == ".") {
 				index++;
 				incrementationIndex = true;
 			}
 			// Si la ligne courante est vide et que l'index est > 0
-			if (index > 0 && currentLine.empty())
-			{
+			if (index > 0 && currentLine.empty()) {
 				index++;
 				incrementationIndex = true;
 			}
@@ -217,67 +156,179 @@ void Structure::getCorpsViaScript(string fichierResultat, string fileName, int n
 			 * "II " ou encore  "II." alors l'introduction est considérée
 			 * comme terminée 
 		 	 * */
-			if (index >= 2 && !currentLine.empty() 
-				&& (currentLine.substr(0,2)=="2." 
-					|| currentLine.substr(0,2)=="2 " 
-					|| currentLine.substr(0,3)=="II."
-					|| currentLine.substr(0,3)=="II "))
+			if (!currentLine.empty() 
+			&& (currentLine.substr(0,2)=="2." 
+				|| currentLine.substr(0,2)=="2 " 
+				|| currentLine.substr(0,3)=="II."
+				|| currentLine.substr(0,3)=="II ")) /*|| n == nbLigneCorps)*/
 			{
-				introduction = false;
-				corps = true;
-			}
-			else  // Sinon on réinitialise le compteur à zéro
-			{
+				break;
+			} else if (n2 > 1) {  // Sinon on réinitialise le compteur à zéro
 				introductionVec.push_back(currentLine);
+
 				if(!incrementationIndex)
 					index = 0;
 			}
 		}
-		if(conclusion)
-		{
-			if(conclusion == false)
-			{
-				corps = false;
-				conclusion = true;
-			}
-			if(catchSection(currentLine, stringToCompareWithRef))
-			{
-				break;
-			}
-			else
-			{
-				conclusionVec.push_back(currentLine);
-			}
-		}
-		if(corps)
-		{
-			if (catchSection(currentLine, stringToCompareWithConclusion) || n ==nbLigneConclusion)
-			{
-				conclusion = true;
-				corps = false;
-			}
-			else
-			{
-				corpsVec.push_back(currentLine);
-			}
-		}
 	} // Fin de la boucle alimentant l'introduction
+	file.close();
 
 	if (param == 1)
 		writeIntroductionInFileX(fileName, introductionVec);
 	else
 		writeIntroductionInFile(fileName, introductionVec);
 
+	getCorpsViaScript(fichierResultat, fileName, n,nbLigneConclusion, nbLigneDiscussion,nbLigneReference);
+
+}
+
+
+void Structure::getCorpsViaScript(string fichierResultat, string fileName, int nbLigneActuel, int nbLigneConclusion, int nbLigneDiscussion, int nbLigneReference) {
+	// Déclaration
+	ifstream file;
+	bool inside = false;
+	int n = 0;
+	string currentLine;
+
+	vector<string> corpsVec, stringToCompareWithConclusion,stringToCompareWithDiscussion;
+
+	// Dictionnaire de comparaison (conclusion)
+	stringToCompareWithDiscussion.push_back("7. Discussion"); // temporaire
+
+	// Dictionnaire de comparaison (conclusion)
+	stringToCompareWithConclusion.push_back("Conclusion");
+	stringToCompareWithConclusion.push_back("Conclusions");
+	stringToCompareWithConclusion.push_back("conclusion");
+	stringToCompareWithConclusion.push_back("conclusions");
+	stringToCompareWithConclusion.push_back("CONCLUSION");
+	stringToCompareWithConclusion.push_back("CONCLUSIONS");
+
+	file.open(fichierResultat);
+
+	while (!file.eof()) {
+		getline(file, currentLine);
+		n++;
+
+		if (n == nbLigneActuel || inside) {
+			inside = true;
+
+			if (nbLigneDiscussion != -1) {
+				if (n == nbLigneDiscussion) {
+					inside = false;
+					break;
+				} else {
+					corpsVec.push_back(currentLine);
+				}
+			} else {
+				if (catchSection(currentLine, stringToCompareWithConclusion) || n == nbLigneConclusion) {
+					inside = false;
+					break;
+				} else {
+					corpsVec.push_back(currentLine);
+				}
+			}
+		}
+	}
+	file.close();
+
 	if (param == 1)
 		writeBodyInFileX(fileName, corpsVec);
 	else
 		writeBodyInFile(fileName, corpsVec);
+	
+	getDiscussionViaScript(fichierResultat, fileName, n, nbLigneConclusion,nbLigneDiscussion,nbLigneReference);
+}
+
+
+void Structure::getDiscussionViaScript(string fichierResultat, string fileName, int nbLigneActuel, int nbLigneConclusion,int nbLigneDiscussion,int nbLigneReference) {
+	// Déclaration
+	ifstream file;
+	int n = 0;
+	bool inside = false;
+	string currentLine;
+	int n2=0;
+
+	vector<string> discussionVec, stringToCompareWithConclusion;
+
+	file.open(fichierResultat);
+	if (nbLigneDiscussion != -1) {
+		// Dictionnaire de comparaison (conclusion)
+		stringToCompareWithConclusion.push_back("Conclusion");
+		stringToCompareWithConclusion.push_back("Conclusions");
+		stringToCompareWithConclusion.push_back("conclusion");
+		stringToCompareWithConclusion.push_back("conclusions");
+		stringToCompareWithConclusion.push_back("CONCLUSION");
+		stringToCompareWithConclusion.push_back("CONCLUSIONS");
+
+		while (!file.eof()) {
+			getline(file, currentLine);
+			n++;
+
+			if (n == nbLigneActuel || inside) {
+				n2++;
+				inside = true;
+				if (catchSection(currentLine, stringToCompareWithConclusion) || n == nbLigneConclusion) {
+					inside = false;
+					break;
+				} else if (n2 > 1) {
+					discussionVec.push_back(currentLine);
+				}
+
+			}
+		}
+	}
+	file.close();
+
+	if (param == 1)
+		writeDiscussionInFileX(fileName, discussionVec);
+	else
+		writeDiscussionInFile(fileName, discussionVec);
+
+	if (nbLigneDiscussion != -1)
+		getConclusionViaScript(fichierResultat, fileName, n, nbLigneReference);
+	else
+		getConclusionViaScript(fichierResultat, fileName, nbLigneConclusion, nbLigneReference);	
+}
+
+
+void Structure::getConclusionViaScript(string fichierResultat, string fileName, int nbLigneActuel,int nbLigneReference) {
+	// Déclaration
+	ifstream file;
+	int n = 0;
+	int n2=0;
+	bool inside = false;
+	string currentLine;
+	vector<string> conclusionVec;
+
+	file.open(fichierResultat);
+	while (!file.eof()) {
+		getline(file, currentLine);
+		n++;
+
+		if (n == nbLigneActuel || inside) {
+			n2++;
+			inside = true;
+			if ( n == nbLigneReference) {
+				inside = false;
+				break;
+			} else if (n2 > 1) {
+				conclusionVec.push_back(currentLine);
+			}
+		}
+	}
+	file.close();
 
 	if (param == 1)
 		writeConclusionInFileX(fileName, conclusionVec);
 	else
 		writeConclusionInFile(fileName, conclusionVec);
+
+	getBiblioViaScript(fichierResultat, fileName, nbLigneReference);
 }
+
+
+
+
 
 
 void Structure::writeIntroductionInFileX(string FileName, vector<string> introduction) {
@@ -288,9 +339,9 @@ void Structure::writeIntroductionInFileX(string FileName, vector<string> introdu
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de l'introduction dans le fichier .xml
-	out << "\n\t<introduction>" << endl;
+	out << "\t<introduction>" << endl;
 	for (unsigned int index=0; index < introduction.size(); index++)
-		out << "\t\t\n" << introduction[index];
+		out << "\t\t" << introduction[index] << endl;
 	out << "\n\t</introduction>" << endl;
 
 	// Fermeture du fichier .xml
@@ -305,9 +356,9 @@ void Structure::writeIntroductionInFile(string FileName, vector<string> introduc
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de l'introduction dans le fichier .xml
-	out << "Introduction:" << endl;
+	out << "\n\nIntroduction:" << endl;
 	for (unsigned int index=0; index < introduction.size(); index++)
-		out << introduction[index] ;
+		out << "\t" << introduction[index] << endl;
 
 	// Fermeture du fichier .xml
 	out.close();
@@ -322,9 +373,9 @@ void Structure::writeBodyInFileX(string FileName, vector<string> body) {
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de body dans le fichier .xml
-	out << "\n\t<body>" << endl;
+	out << "\t<body>" << endl;
 	for (unsigned int index=0; index < body.size(); index++)
-		out << "\t\t\n" << body[index];
+		out << "\t\t" << body[index] << endl;
 	out << "\n\t</body>" << endl;
 
 	// Fermeture du fichier .xml
@@ -339,9 +390,42 @@ void Structure::writeBodyInFile(string FileName, vector<string> body) {
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de body dans le fichier .xml
-	out << "Body: " << endl;
+	out << "\n\nBody:" << endl;
 	for (unsigned int index=0; index < body.size(); index++)
-		out << body[index] << endl;
+		out << "\t"<< body[index] << endl;
+
+	// Fermeture du fichier .xml
+	out.close();
+}
+
+void Structure::writeDiscussionInFileX(string FileName, vector<string> Discussion) {
+	// Déclaration du flux d'écriture
+	std::ofstream out;
+
+	// Initialisation du flux de sortie vers le fichier .xml
+	out.open(FileName, std::ios::app);
+
+	// Ecriture de body dans le fichier .xml
+	out << "\t<Discussion>" << endl;
+	for (unsigned int index = 0; index < Discussion.size(); index++)
+		out << "\t\t" << Discussion[index] << endl;
+	out << "\t</Discussion>" << endl;
+
+	// Fermeture du fichier .xml
+	out.close();
+}
+
+
+void Structure::writeDiscussionInFile(string FileName, vector<string> Discussion) {
+	std::ofstream out;
+
+	// Initialisation du flux de sortie vers le fichier .xml
+	out.open(FileName, std::ios::app);
+
+	// Ecriture de body dans le fichier .xml
+	out << "\n\nDiscussion:" << endl;
+	for (unsigned int index = 0; index < Discussion.size(); index++)
+		out << "\t" << Discussion[index] << endl;
 
 	// Fermeture du fichier .xml
 	out.close();
@@ -356,10 +440,10 @@ void Structure::writeConclusionInFileX(string FileName, vector<string> conclusio
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de conclusion dans le fichier .xml
-	out << "\n\t<conclusion>" << endl;
+	out << "\t<conclusion>" << endl;
 	for (unsigned int index=0; index < conclusion.size(); index++)
-		out << "\t\t\n" << conclusion[index];
-	out << "\n\t</conclusion>" << endl;
+		out << "\t\t" << conclusion[index] << endl;
+	out << "\t</conclusion>" << endl;
 
 	// Fermeture du fichier .xml
 	out.close();
@@ -373,9 +457,9 @@ void Structure::writeConclusionInFile(string FileName, vector<string> conclusion
 	out.open(FileName, std::ios::app);
 	
 	// Ecriture de conclusion dans le fichier .xml
-	out << "conclusion:" << endl;
+	out << "\n\nConclusion:" << endl;
 	for (unsigned int index=0; index < conclusion.size(); index++)
-		out << conclusion[index];
+		out << "\t" << conclusion[index] << endl;
 
 	// Fermeture du fichier .xml
 	out.close();

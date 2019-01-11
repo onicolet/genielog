@@ -16,7 +16,7 @@ public:
 	Titre();
 	Titre(string);
 	~Titre();
-	void getTitreViaScript(string fichierResultat, string);
+	int getTitreViaScript(string fichierResultat, string);
 	void writeFile(string FileName, vector<string> titre);
 	void writeFileX(string, vector<string>);
 };

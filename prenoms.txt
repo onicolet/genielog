@@ -3,10 +3,14 @@ Aarika
 Abagael
 Abagail
 Abbe
+Nathan
+Mikhail
 Abbey
 Abbi
 Abbie
 Abby
+Chin-Yew
+Vangelis
 Abbye
 Abigael
 Abigail
@@ -3988,6 +3992,7 @@ Rachelle
 Rae
 Raeann
 Raf
+Tomas
 Rafa
 Rafaela
 Rafaelia
@@ -4000,10 +4005,12 @@ Rakel
 Ralina
 Ramona
 Ramonda
+Sadaoki
 Rana
 Randa
 Randee
 Randene
+Jonathan
 Randi
 Randie
 Randy
